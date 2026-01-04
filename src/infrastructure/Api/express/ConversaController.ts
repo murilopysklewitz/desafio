@@ -1,6 +1,6 @@
-import { pool } from "config/postgresConfig";
+import { pool } from "../../../config/postgresConfig";
 import { Request, Response } from "express";
-import { ApiResponse, Conversa } from "infrastructure/types/indexTypes";
+import { ApiResponse, Conversa } from "../../../infrastructure/types/indexTypes";
 
 
 interface SalvarConversaBody {

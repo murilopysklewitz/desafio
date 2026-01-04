@@ -1,5 +1,19 @@
 
 services:
+  api:
+    build: ./
+    container_name: api
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/restaurante_db
+      N8N_WEBHOOK: http://n8n:5678/webhook/botApi
+    depends_on:
+      - postgres
+    networks:
+      - chatbot_network
+
   postgres:
     image: postgres:16
     container_name: postgres_restaurante
@@ -13,26 +27,28 @@ services:
       POSTGRES_DB: restaurante_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - chatbot_network
 
   n8n:
     image: n8nio/n8n:latest
     container_name: chatbot_n8n
     restart: unless-stopped
+    ports:
+      - "5678:5678"
     environment:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
-      - N8N_HOST=localhost
-      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_HOST=n8n
+      - WEBHOOK_URL=http://n8n:5678/
       - GENERIC_TIMEZONE=America/Sao_Paulo
-      - N8N_CUSTOM_EXTENSIONS=/data/custom
-    ports:
-      - "5678:5678"
     volumes:
       - n8n_data:/home/node/.n8n
-    networks:
-      - chatbot_network
     depends_on:
       - postgres
+      - api
+    networks:
+      - chatbot_network
 
 volumes:
   postgres_data:

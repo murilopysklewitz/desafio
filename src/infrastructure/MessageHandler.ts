@@ -16,6 +16,10 @@ export class MessageHandler{
             console.log(messages)
             const msg = messages[0];
 
+            if(!msg.message || msg.key.fromMe|| msg.key.remoteJid?.includes('@g.us')){
+                return
+            }
+
             const textFromZap = msg.message?.conversation;
             const from = msg.key.remoteJid
 

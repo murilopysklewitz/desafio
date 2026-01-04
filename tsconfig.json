@@ -66,10 +66,6 @@
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     "rootDir": "./src", 
      "outDir": "./dist",
-     "baseUrl": "./src", 
-     "paths": {
-      "@prisma/*": ["package/prisma/*"] 
-    },
     
     // "removeComments": true,                           /* Disable emitting comments. */
     // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */

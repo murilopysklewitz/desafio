@@ -3,7 +3,6 @@ import type { Request, Response } from "express";
 import { pool } from "../../../config/postgresConfig";
 export class CardapioController {
     constructor(private readonly pool: Pool){
-        this.pool = pool
     }
 
     async list(request:Request, response:Response) {
@@ -14,11 +13,11 @@ export class CardapioController {
             const params = [];
 
             if (categoria) {
-                query += 'AND categoria = $1';
+                query += ' AND categoria = $1';
                 params.push(categoria)
             }
 
-            query += 'ORDER BY categoria , nome'
+            query += ' ORDER BY categoria , nome'
 
             const result = await pool.query(query, params)
 
@@ -47,6 +46,7 @@ export class CardapioController {
                     sucesso: false,
                     erro: "Produto não encontrado"
                 })
+                return
             }
             response.json({
                 sucesso: true,
@@ -57,6 +57,49 @@ export class CardapioController {
             response.status(500).json({
                 sucesso: false,
                 erro: 'Erro ao buscar produto'
+            });
+        }
+    }
+
+    async formatarParaWhatsApp(request: Request, response: Response): Promise<void> {
+        try {
+            const result = await this.pool.query(
+                'SELECT * FROM cardapio WHERE disponivel = true ORDER BY categoria, nome'
+            );
+
+            const categorias: Record<string, any[]> = {};
+
+            result.rows.forEach((item) => {
+                if (!categorias[item.categoria]) {
+                    categorias[item.categoria] = [];
+                }
+                categorias[item.categoria].push(item);
+            });
+
+            let mensagem = '*CARDÁPIO*\n\n';
+
+            Object.keys(categorias).forEach((cat) => {
+                mensagem += `📌 *${cat.toUpperCase()}*\n`;
+                categorias[cat].forEach((item) => {
+                    mensagem += `${item.id} - ${item.nome}\n`;
+                    mensagem += `   ${item.descricao}\n`;
+                    mensagem += `   R$ ${parseFloat(item.preco).toFixed(2)}\n\n`;
+                });
+            });
+
+            mensagem += 'Para fazer pedido, envie:\n';
+            mensagem += '*pedido ID quantidade*\n';
+            mensagem += 'Ex: pedido 1 2';
+
+            response.json({
+                sucesso: true,
+                mensagem
+            });
+        } catch (error) {
+            console.error('Erro ao formatar cardápio:', error);
+            response.status(500).json({
+                sucesso: false,
+                erro: 'Erro ao formatar cardápio'
             });
         }
     }

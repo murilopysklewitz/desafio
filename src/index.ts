@@ -7,20 +7,23 @@ import { MessageHandler } from './infrastructure/MessageHandler';
 import cardapioRoute from './infrastructure/Api/express/routes/cardapioRoute';
 import pedidoRoute from './infrastructure/Api/express/routes/pedidoRoute';
 import { pool, testarConexao } from './config/postgresConfig';
-import { conversaRoute } from 'infrastructure/Api/express/routes/ConversaRoute';
+import { conversaRoute } from './infrastructure/Api/express/routes/conversaRoute';
 
 
 async function main() {
   dotenv.config();
 
   const app = express();
+
   const PORT = process.env.PORT || 3000;
   const phoneNumber = process.env.PHONE_NUMBER || ""
+
   const sock = await baileysConfig()
 
   const botRouter = await botRoute(sock)
   const conversaRouter = await conversaRoute()
-  const messageHandler = new MessageHandler(sock)
+
+  new MessageHandler(sock)
 
   app.use(express.json());
 

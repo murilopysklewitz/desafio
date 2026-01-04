@@ -7,7 +7,12 @@ export async function conversaRoute() {
     const conversaController = new ConversaController()
 
     conversaRouter.post('/', async (req: Request, res: Response) => {
-        await conversaController.salvar(req, res)
-    })
-    return conversaRoute
+        await conversaController.salvar(req, res);
+    });
+
+    conversaRouter.get('/:telefone', async (req: Request, res: Response) => {
+        await conversaController.historico(req, res);
+    });
+
+    return conversaRouter;
 }
