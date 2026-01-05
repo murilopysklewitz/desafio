@@ -35,6 +35,7 @@ export class MessageHandler{
             }
 
             try{
+            console.log("Enviando pro n8n:", process.env.N8N_WEBHOOK, { from, text });
              await axios.post(n8nStringConnection, {from, text})
             }catch(error:any){
                 console.error("Erro ao enviar webhook para n8n", error.message)
