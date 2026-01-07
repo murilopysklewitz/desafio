@@ -2,29 +2,27 @@ import { DomainException } from "../exceptions/DomainException";
 
 export class Usuario {
     private constructor(
-        private readonly id: number | null,
         private readonly nome: string,
-        private readonly numero: string,
+        private readonly telefone: string,
         private endereco: string | undefined,
         private readonly createdAt: Date,
         private updatedAt: Date
     ) {}
 
-    static create(nome: string, numero: string): Usuario {
+    static create(nome: string, telefone: string): Usuario {
         if (!nome) {
             throw new DomainException("Nome não pode ser nulo");
         }
 
-        if (!numero) {
+        if (!telefone) {
             throw new DomainException("Número não pode ser nulo");
         }
 
         const now = new Date();
 
         return new Usuario(
-            null,
             nome,
-            numero,
+            telefone,
             undefined,
             now,
             now
@@ -32,17 +30,15 @@ export class Usuario {
     }
 
     static restore(
-        id: number,
         nome: string,
-        numero: string,
+        telefone: string,
         endereco: string | undefined,
         createdAt: Date,
         updatedAt: Date
     ): Usuario {
         return new Usuario(
-            id,
             nome,
-            numero,
+            telefone,
             endereco,
             createdAt,
             updatedAt
@@ -58,16 +54,12 @@ export class Usuario {
         this.updatedAt = new Date();
     }
 
-    getId() {
-        return this.id;
-    }
-
     getNome() {
         return this.nome;
     }
 
-    getNumero() {
-        return this.numero;
+    getTelefone() {
+        return this.telefone;
     }
 
     getEndereco() {

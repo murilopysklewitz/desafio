@@ -2,6 +2,7 @@ CREATE TABLE usuarios (
     telefone VARCHAR(20) PRIMARY KEY,
     nome VARCHAR(100),
     endereco TEXT,
+    estado VARCHAR(20) DEFAULT 'CONVERSA',
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -25,7 +26,7 @@ CREATE TABLE pedidos (
     telefone VARCHAR(20) REFERENCES usuarios(telefone),
     itens JSONB NOT NULL,
     valor_total DECIMAL(10,2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pendente',
+    status VARCHAR(20) DEFAULT 'PENDENTE',
     endereco TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -34,18 +35,7 @@ CREATE INDEX idx_pedidos_status ON pedidos(status);
 CREATE INDEX idx_pedidos_criado_em ON pedidos(criado_em DESC);
 CREATE INDEX idx_pedidos_telefone ON pedidos(telefone);
 
-CREATE TABLE conversas (
-    id SERIAL PRIMARY KEY,
-    telefone VARCHAR(20) REFERENCES usuarios(telefone),
-    mensagem TEXT NOT NULL,
-    resposta TEXT,
-    tipo VARCHAR(20),
-    created_at TIMESTAMP DEFAULT NOW()
-);
 
-CREATE INDEX idx_conversas_telefone ON conversas(telefone);
-CREATE INDEX idx_conversas_criado_em ON conversas(criado_em DESC);
-CREATE INDEX idx_conversas_tipo ON conversas(tipo);
 
 INSERT INTO cardapio (nome, descricao, preco, categoria) VALUES
     ('Pizza Margherita', 'Molho de tomate, mussarela e manjericão fresco', 35.00, 'pizza'),

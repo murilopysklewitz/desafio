@@ -32,8 +32,7 @@ async function main() {
   app.use('/api/cardapio', cardapioRoute);
   app.use('/api/pedidos', pedidoRoute);
   app.use('/api/bot', botRouter);
-  app.use('/api/conversa', conversaRouter)
-  app.use("api/usuario", usuarioRouter)
+  app.use("/api/usuarios", usuarioRouter)
 
   try {
     const conectado = await testarConexao();
